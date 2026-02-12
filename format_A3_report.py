@@ -1,12 +1,12 @@
+from openpyxl import load_workbook
 import argparse
 from datetime import datetime, timedelta
-import excel
-from openpyxl import load_workbook, Workbook
 import csv
 import sys
 import os
+import excel
 
-TEMPLATE_EXCEL_FILE_PATH = "NANO_KAFFEE_GmbH_YYYY_MM_Abt.3A.xlsx"
+TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Abt.3A.xlsx"
 
 
 def get_previous_month_range():
@@ -20,7 +20,7 @@ def get_previous_month_range():
 
 class A3Report:
     def __init__(self):
-        self.wb = load_workbook(TEMPLATE_EXCEL_FILE_PATH)
+        self.wb = load_workbook(TEMPLATE_EXCEL_FILE)
         self.ws = self.wb.active
         self.amount = {"EU": 0, "Ausfuhr": 0}
 
@@ -44,17 +44,16 @@ class A3Report:
                 self._populate_row(raw_data, idx)
                 idx += 1
 
-    def save(self, target_path=TEMPLATE_EXCEL_FILE_PATH):
+    def save(self, target_path):
         self.ws[excel.AMOUNT["EU"]] = self.amount["EU"]
         self.ws[excel.AMOUNT["Ausfuhr"]] = self.amount["Ausfuhr"]
         start_date, end_date = get_previous_month_range()
         self.ws[excel.TIME_FROM] = start_date.strftime('%d.%m.%Y')
         self.ws[excel.TIME_TO] = end_date.strftime('%d.%m.%Y')
-        target_path = target_path.replace("YYYY", start_date.strftime('%Y'))
-        target_path = target_path.replace("MM", start_date.strftime('%m'))
+        target_file = TEMPLATE_EXCEL_FILE.replace("YYYY", start_date.strftime('%Y'))
+        target_file = target_file.replace("MM", start_date.strftime('%m'))
         # Save the updated XLSX file
-        self.wb.save(target_path)
-
+        self.wb.save(os.path.join(target_path, target_file))
 
 def main():
     # Create an argument parser
@@ -62,7 +61,7 @@ def main():
 
     # Add arguments for input and output files
     parser.add_argument("input_file", type=str, help="Path to the input .csv file")
-    parser.add_argument("output_file", type=str, help="Path to the output file")
+    parser.add_argument("output_path", type=str, help="Path where the target execl should be saved to")
 
     # Parse the arguments
     args = parser.parse_args()
@@ -78,7 +77,8 @@ def main():
 
     report = A3Report()
     report.append_csv_to_xlsx(args.input_file)
-    report.save()
+    report.save(args.output_path)
+
 
 if __name__ == "__main__":
     main()
