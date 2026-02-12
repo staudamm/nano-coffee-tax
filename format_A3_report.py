@@ -19,7 +19,7 @@ def get_previous_month_range():
 
 class A3Report:
     def __init__(self):
-        self.wb = load_workbook(TEMPLATE_EXCEL_FILE)
+        self.wb = load_workbook(os.path.join(os.path.abspath(__file__), TEMPLATE_EXCEL_FILE))
         self.ws = self.wb.active
         self.amount = {"EU": 0, "Ausfuhr": 0}
 
