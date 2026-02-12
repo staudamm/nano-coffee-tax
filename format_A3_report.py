@@ -1,9 +1,8 @@
+import json
 from openpyxl import load_workbook
 import argparse
-from datetime import datetime, timedelta
-import json
-import sys
 import os
+from datetime import datetime, timedelta
 import excel
 
 TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Abt.3A.xlsx"
@@ -27,21 +26,20 @@ class A3Report:
     def _populate_row(self, raw_data, idx):
         row = excel.row.copy()
         for key, source_key in excel.row_key_to_json_key.items():
-            row[key] = int(raw_data[source_key])/1000 if key == "Amount" else raw_data[source_key]
+            row[key] = int(raw_data[source_key]) / 1000 if key == "Amount" else raw_data[source_key]
         row["ID"] = idx + 1
         row["Region"] = "EU" if "B2B" in raw_data['customer.now.tags'] else "Ausfuhr"
         self.amount[row["Region"]] += row["Amount"]
         self.ws.append(list(row.values()))
 
-    def append_json_to_xlsx(self, file_path):
-        self.ws.delete_rows(excel.HEADER_ROW+1, self.ws.max_row)
-        # Append the CSV data to the XLSX file
-        with open(file_path, mode='r', encoding='utf-8') as file:
-            data = json.load(file)
-            idx = 0
-            for raw_data in data[0]['body']['rows']:
-                self._populate_row(raw_data, idx)
-                idx += 1
+    def append_json_to_xlsx(self, json_string):
+        self.ws.delete_rows(excel.HEADER_ROW + 1, self.ws.max_row)
+        # Parse the JSON string
+        data = json.loads(json_string)
+        idx = 0
+        for raw_data in data[0]['body']['rows']:
+            self._populate_row(raw_data, idx)
+            idx += 1
 
     def save(self, target_path):
         self.ws[excel.AMOUNT["EU"]] = self.amount["EU"]
@@ -54,28 +52,20 @@ class A3Report:
         # Save the updated XLSX file
         self.wb.save(os.path.join(target_path, target_file))
 
+
 def main():
     # Create an argument parser
     parser = argparse.ArgumentParser()
 
-    # Add arguments for input and output files
-    parser.add_argument("input_file", type=str, help="Path to the input .json file")
-    parser.add_argument("output_path", type=str, help="Path where the target execl should be saved to")
+    # Add arguments for JSON string and output path
+    parser.add_argument("json_string", type=str, help="JSON string input")
+    parser.add_argument("output_path", type=str, help="Path where the target Excel should be saved to")
 
     # Parse the arguments
     args = parser.parse_args()
 
-    # Validate input file
-    if not args.input_file.endswith('.json'):
-        print("Error: The input file must be a .json file.")
-        sys.exit(1)
-
-    if not os.path.exists(args.input_file):
-        print(f"Error: The input file '{args.input_file}' does not exist.")
-        sys.exit(1)
-
     report = A3Report()
-    report.append_json_to_xlsx(args.input_file)
+    report.append_json_to_xlsx(args.json_string)
     report.save(args.output_path)
 
 
