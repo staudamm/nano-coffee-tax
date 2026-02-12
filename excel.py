@@ -1,18 +1,18 @@
 HEADER_ROW = 14
 
-AMOUNT = {'EU':'C9',
+AMOUNT = {'EU': 'C9',
           'Ausfuhr': 'C10'}
 
 TIME_FROM = 'D6'
 TIME_TO = 'D7'
 
-source_idx_from_key = {
-    "Amount": 1,
-    "Country": 3,
-    "Name": 5,
-    "Address": 6,
-    "Zip": 7,
-    "City": 8,
+row_key_to_json_key = {
+    "Amount": 'total_coffee_weight_sold#total_coffee_weight_sold',
+    "Country": 'shipping_address.country',
+    "Name": 'shipping_address.name',
+    "Address": 'shipping_address.address1',
+    "Zip": 'shipping_address.zip',
+    "City": 'shipping_address.city',
 }
 
 

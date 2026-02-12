@@ -1,7 +1,7 @@
 from openpyxl import load_workbook
 import argparse
 from datetime import datetime, timedelta
-import csv
+import json
 import sys
 import os
 import excel
@@ -26,21 +26,20 @@ class A3Report:
 
     def _populate_row(self, raw_data, idx):
         row = excel.row.copy()
-        for key, source_idx in excel.source_idx_from_key.items():
-            row[key] = int(raw_data[source_idx])/1000 if key == "Amount" else raw_data[source_idx]
+        for key, source_key in excel.row_key_to_json_key.items():
+            row[key] = int(raw_data[source_key])/1000 if key == "Amount" else raw_data[source_key]
         row["ID"] = idx + 1
-        row["Region"] = "EU" if "B2B" in raw_data[9] else "Ausfuhr"
+        row["Region"] = "EU" if "B2B" in raw_data['customer.now.tags'] else "Ausfuhr"
         self.amount[row["Region"]] += row["Amount"]
         self.ws.append(list(row.values()))
 
-    def append_csv_to_xlsx(self, file_path):
+    def append_json_to_xlsx(self, file_path):
         self.ws.delete_rows(excel.HEADER_ROW+1, self.ws.max_row)
         # Append the CSV data to the XLSX file
         with open(file_path, mode='r', encoding='utf-8') as file:
-            reader = csv.reader(file)
-            next(reader)  # Skip the first row
+            data = json.load(file)
             idx = 0
-            for raw_data in reader:
+            for raw_data in data[0]['body']['rows']:
                 self._populate_row(raw_data, idx)
                 idx += 1
 
@@ -60,15 +59,15 @@ def main():
     parser = argparse.ArgumentParser()
 
     # Add arguments for input and output files
-    parser.add_argument("input_file", type=str, help="Path to the input .csv file")
+    parser.add_argument("input_file", type=str, help="Path to the input .json file")
     parser.add_argument("output_path", type=str, help="Path where the target execl should be saved to")
 
     # Parse the arguments
     args = parser.parse_args()
 
     # Validate input file
-    if not args.input_file.endswith('.csv'):
-        print("Error: The input file must be a .csv file.")
+    if not args.input_file.endswith('.json'):
+        print("Error: The input file must be a .json file.")
         sys.exit(1)
 
     if not os.path.exists(args.input_file):
@@ -76,7 +75,7 @@ def main():
         sys.exit(1)
 
     report = A3Report()
-    report.append_csv_to_xlsx(args.input_file)
+    report.append_json_to_xlsx(args.input_file)
     report.save(args.output_path)
 
 
