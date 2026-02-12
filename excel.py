@@ -1,7 +1,7 @@
 HEADER_ROW = 14
 
-TOTAL_EU = 'C9'
-TOTAL_EXPORT = 'C10'
+AMOUNT = {'EU':'C9',
+          'Ausfuhr': 'C10'}
 
 TIME_FROM = 'D6'
 TIME_TO = 'D7'
