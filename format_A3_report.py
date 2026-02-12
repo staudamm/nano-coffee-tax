@@ -1,5 +1,5 @@
 import json
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 import argparse
 import os
 from datetime import datetime, timedelta
@@ -18,8 +18,8 @@ def get_previous_month_range():
 
 
 class A3Report:
-    def __init__(self):
-        self.wb = load_workbook(os.path.join(os.path.abspath(__file__), TEMPLATE_EXCEL_FILE))
+    def __init__(self, wb: Workbook):
+        self.wb = wb
         self.ws = self.wb.active
         self.amount = {"EU": 0, "Ausfuhr": 0}
 
@@ -59,14 +59,15 @@ def main():
 
     # Add arguments for JSON string and output path
     parser.add_argument("json_string", type=str, help="JSON string input")
-    parser.add_argument("output_path", type=str, help="Path where the target Excel should be saved to")
+    parser.add_argument("excel_path", type=str, help="Path where the Excel files are (template and target)")
 
     # Parse the arguments
     args = parser.parse_args()
 
-    report = A3Report()
+    wb = load_workbook(os.path.join(args.excel_path), TEMPLATE_EXCEL_FILE)
+    report = A3Report(wb)
     report.append_json_to_xlsx(args.json_string)
-    report.save(args.output_path)
+    report.save(args.excel_path)
 
 
 if __name__ == "__main__":
