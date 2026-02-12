@@ -64,7 +64,7 @@ def main():
     # Parse the arguments
     args = parser.parse_args()
 
-    wb = load_workbook(os.path.join(args.excel_path), TEMPLATE_EXCEL_FILE)
+    wb = load_workbook(os.path.join(args.excel_path, TEMPLATE_EXCEL_FILE))
     report = A3Report(wb)
     report.append_json_to_xlsx(args.json_string)
     report.save(args.excel_path)
