@@ -38,9 +38,9 @@ class A3Report:
         # To properly handle the '-character in property names (e.g. cumstomer_address), the n8n-node has to encodeURI
         # the request body before sending it to the script. Therefore, we have to decode the JSON string before loading.
         decoded_json = unquote(json_string)
-        data = json.loads(decoded_json)
+        rows = json.loads(decoded_json)
         idx = 0
-        for raw_data in data[0]['body']['rows']:
+        for raw_data in rows:
             self._populate_row(raw_data, idx)
             idx += 1
 
