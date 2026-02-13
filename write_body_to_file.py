@@ -19,11 +19,12 @@ def main():
 
     # Add arguments for JSON string and output path
     parser.add_argument("json_string", type=str, help="JSON string input")
-    parser.add_argument("excel_path", type=str, help="Path where the Excel files are (template and target)")
+    parser.add_argument("target_file", type=str, help="Target file")
 
     # Parse the arguments
     args = parser.parse_args()
-    create_file(args.json_string, args.excel_path)
+    create_file(args.json_string, args.target_file)
+
 
 if __name__ == "__main__":
     main()
