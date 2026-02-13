@@ -8,13 +8,16 @@ import excel
 from format_A3_report import build_excel_file_name, get_previous_month_range
 
 TRACKING_URL_PREFIX = "https://www.fedex.com/fedextrack/?trknbr="
+ORDER_URL_PREFIX = "https://admin.shopify.com/store/nano-kaffee/orders/"
 
 
 def create_order_to_tracking_url_mapping(json_string):
     json_string = unquote(json_string)
     rows = json.loads(json_string)
 
-    return {row['name']: row['tracking_numbers'][0] for row in rows}
+    return {row['name']:
+                {"tracking": row['tracking_numbers'][0], "id": row["_id"]}
+            for row in rows}
 
 
 class TrackingManager:
@@ -24,11 +27,14 @@ class TrackingManager:
 
     def add_tracking(self, mapping):
         for row_idx in range(excel.HEADER_ROW + 1, self.ws.max_row + 1):
-            order_id = self.ws[excel.ORDER_COL + str(row_idx)].value
+            order_cell = excel.ORDER_COL + str(row_idx)
+            order_id = self.ws[order_cell].value
             if order_id in mapping:
-                self.ws[excel.TRACKER_COL + str(row_idx)].value = mapping[order_id]
-                self.ws[excel.TRACKER_COL + str(row_idx)].hyperlink = TRACKING_URL_PREFIX + mapping[order_id]
+                self.ws[excel.TRACKER_COL + str(row_idx)].value = mapping[order_id]["tracking"]
+                self.ws[excel.TRACKER_COL + str(row_idx)].hyperlink = TRACKING_URL_PREFIX + mapping[order_id]["tracking"]
                 self.ws[excel.TRACKER_COL + str(row_idx)].style = "Hyperlink"
+                self.ws[order_cell].hyperlink = ORDER_URL_PREFIX + mapping[order_id]["id"]
+                self.ws[order_cell].style = "Hyperlink"
 
     def save(self, target_path):
         self.wb.save(target_path)
