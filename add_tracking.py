@@ -1,8 +1,9 @@
 import argparse
-from openpyxl import load_workbook, Workbook
 import os
 from urllib.parse import unquote
 import json
+from openpyxl import load_workbook, Workbook
+
 import excel
 from format_A3_report import build_excel_file_name, get_previous_month_range
 
@@ -10,12 +11,10 @@ TRACKING_URL_PREFIX = "https://www.fedex.com/fedextrack/?trknbr="
 
 
 def create_order_to_tracking_url_mapping(json_string):
-    decoded_json = unquote(json_string)
-    rows = json.loads(decoded_json)
-    mapping = {}
-    for row in rows:
-        mapping[row['order name']] = row['tracking_number']
-    return mapping
+    json_string = unquote(json_string)
+    rows = json.loads(json_string)
+
+    return {row['name']: row['tracking_numbers'][0] for row in rows}
 
 
 class TrackingManager:
