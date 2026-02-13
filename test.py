@@ -1,11 +1,12 @@
 import json
 import argparse
+from urllib.parse import unquote
 
 
 def create_file(json_string, output_file):
     # Load JSON data
-    data = json.loads(json_string)
-    text = data[0]['body']
+    data = json.loads(unquote(json_string))
+    text = data
     # Write JSON data to the output file
     with open(output_file, 'w', encoding='utf-8') as file:
         json.dump(text, file, indent=4)
