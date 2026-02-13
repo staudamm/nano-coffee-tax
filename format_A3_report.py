@@ -5,8 +5,7 @@ import argparse
 import os
 from datetime import datetime, timedelta
 import excel
-
-TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Abt.3A.xlsx"
+from excel import TEMPLATE_EXCEL_FILE
 
 
 def get_previous_month_range():
@@ -16,6 +15,10 @@ def get_previous_month_range():
     first_day_of_previous_month = last_day_of_previous_month.replace(day=1)
 
     return first_day_of_previous_month, last_day_of_previous_month
+
+
+def build_excel_file_name(start_date, end_date):
+    return TEMPLATE_EXCEL_FILE.replace("YYYY", start_date.strftime('%Y')).replace("MM", start_date.strftime('%m'))
 
 
 class A3Report:
@@ -50,8 +53,7 @@ class A3Report:
         start_date, end_date = get_previous_month_range()
         self.ws[excel.TIME_FROM] = start_date.strftime('%d.%m.%Y')
         self.ws[excel.TIME_TO] = end_date.strftime('%d.%m.%Y')
-        target_file = TEMPLATE_EXCEL_FILE.replace("YYYY", start_date.strftime('%Y'))
-        target_file = target_file.replace("MM", start_date.strftime('%m'))
+        target_file = build_excel_file_name(start_date, end_date)
         # Save the updated XLSX file
         self.wb.save(os.path.join(target_path, target_file))
 

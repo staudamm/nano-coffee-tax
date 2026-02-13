@@ -5,6 +5,8 @@ AMOUNT = {'EU': 'C9',
 
 TIME_FROM = 'D6'
 TIME_TO = 'D7'
+TRACKER_COL = 'M'
+ORDER_COL = 'R'
 
 row_key_to_json_key = {
     "Amount": 'total_coffee_weight_sold#total_coffee_weight_sold',
@@ -37,3 +39,4 @@ row = {
     "Confirmation": "",
     "Order ID": ""
 }
+TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Abt.3A.xlsx"
