@@ -13,6 +13,7 @@ row_key_to_json_key = {
     "Address": 'shipping_address.address1',
     "Zip": 'shipping_address.zip',
     "City": 'shipping_address.city',
+    "Order ID": 'order_name'
 }
 
 
@@ -30,5 +31,9 @@ row = {
     "City": "",
     "VAT Number": "",
     "Tracking URL": "",
-    "Reference": ""
+    "Reference": "",
+    "MRN": "",
+    "Send Method": "",
+    "Confirmation": "",
+    "Order ID": ""
 }
