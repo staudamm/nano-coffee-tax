@@ -38,6 +38,7 @@ class TrackingManager:
 
     def save(self, target_path):
         self.wb.save(target_path)
+        print(target_path)
 
 
 def main():
