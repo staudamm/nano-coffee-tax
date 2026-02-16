@@ -4,8 +4,8 @@ from openpyxl import load_workbook, Workbook
 import argparse
 import os
 from datetime import datetime, timedelta
-import A3_excel
-from A3_excel import TEMPLATE_EXCEL_FILE
+import excel
+from excel import A3_TEMPLATE_EXCEL_FILE as TEMPLATE_EXCEL_FILE
 
 
 def get_previous_month_range():
@@ -37,7 +37,7 @@ class A3Report:
         self.ws.append(list(row.values()))
 
     def append_json_to_xlsx(self, json_string):
-        self.ws.delete_rows(excel.HEADER_ROW + 1, self.ws.max_row)
+        self.ws.delete_rows(excel.A3_HEADER_ROW + 1, self.ws.max_row)
         # To properly handle the '-character in property names (e.g. cumstomer_address), the n8n-node has to encodeURI
         # the request body before sending it to the script. Therefore, we have to decode the JSON string before loading.
         decoded_json = unquote(json_string)

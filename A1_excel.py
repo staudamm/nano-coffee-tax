@@ -1,6 +1,0 @@
-A1_HEADER_ROW = 17
-
-TIME_FROM = 'D6'
-TIME_TO = 'D7'
-
-A1_TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Röstprotokoll_Beleg_zu_Abtl.1.xlsx"

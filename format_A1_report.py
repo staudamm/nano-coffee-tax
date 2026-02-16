@@ -1,13 +1,11 @@
-import json
-from urllib.parse import unquote
 import xlrd
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl import load_workbook, Workbook
 import argparse
 import os
 from datetime import datetime, timedelta
-import A1_excel as excel
-from A1_excel import A1_TEMPLATE_EXCEL_FILE
+import excel
+from excel import A1_TEMPLATE_EXCEL_FILE as TEMPLATE_EXCEL_FILE
 
 
 def get_previous_month_range():
@@ -20,7 +18,8 @@ def get_previous_month_range():
 
 
 def build_excel_file_name(start_date):
-    return A1_TEMPLATE_EXCEL_FILE.replace("YYYY", start_date.strftime('%Y')).replace("MM", start_date.strftime('%m'))
+    return TEMPLATE_EXCEL_FILE.replace("YYYY", start_date.strftime('%Y'))\
+        .replace("MM", start_date.strftime('%m'))
 
 
 class A1Report:
@@ -57,12 +56,13 @@ def main():
     # Parse the arguments
     args = parser.parse_args()
 
-    wb = load_workbook(os.path.join(args.excel_path, A1_TEMPLATE_EXCEL_FILE))
+    wb = load_workbook(os.path.join(args.excel_path, TEMPLATE_EXCEL_FILE))
 
     production_report = xlrd.open_workbook(args.source_file)
     report = A1Report(wb)
     report.add_production_report(production_report.sheet_by_index(0))
     report.save(args.excel_path)
+
 
 if __name__ == "__main__":
     main()

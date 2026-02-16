@@ -1,4 +1,5 @@
-HEADER_ROW = 14
+A3_HEADER_ROW = 14
+A3_TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Abt.3A.xlsx"
 
 AMOUNT = {'EU': 'C9',
           'Ausfuhr': 'C10'}
@@ -39,4 +40,5 @@ row = {
     "Confirmation": "",
     "Order ID": ""
 }
-TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Abt.3A.xlsx"
+A1_HEADER_ROW = 17
+A1_TEMPLATE_EXCEL_FILE = "NANO_KAFFEE_GmbH_YYYY_MM_Röstprotokoll_Beleg_zu_Abtl.1.xlsx"

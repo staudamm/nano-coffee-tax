@@ -4,7 +4,7 @@ from urllib.parse import unquote
 import json
 from openpyxl import load_workbook, Workbook
 
-import A3_excel
+import excel
 from format_A3_report import build_excel_file_name, get_previous_month_range
 
 TRACKING_URL_PREFIX = "https://www.fedex.com/fedextrack/?trknbr="
@@ -26,7 +26,7 @@ class TrackingManager:
         self.ws = self.wb.active
 
     def add_tracking(self, mapping):
-        for row_idx in range(excel.HEADER_ROW + 1, self.ws.max_row + 1):
+        for row_idx in range(excel.A3_HEADER_ROW + 1, self.ws.max_row + 1):
             order_cell = excel.ORDER_COL + str(row_idx)
             order_id = self.ws[order_cell].value
             if order_id in mapping:
