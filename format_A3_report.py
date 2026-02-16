@@ -48,8 +48,8 @@ class A3Report:
             idx += 1
 
     def save(self, target_path):
-        self.ws[excel.AMOUNT["EU"]] = self.amount["EU"]
-        self.ws[excel.AMOUNT["Ausfuhr"]] = self.amount["Ausfuhr"]
+        self.ws[excel.A3_AMOUNT_EU] = self.amount["EU"]
+        self.ws[excel.A3_AMOUNT_AUSFUHR] = self.amount["Ausfuhr"]
         start_date, end_date = get_previous_month_range()
         self.ws[excel.TIME_FROM] = start_date.strftime('%d.%m.%Y')
         self.ws[excel.TIME_TO] = end_date.strftime('%d.%m.%Y')
