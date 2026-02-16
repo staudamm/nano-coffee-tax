@@ -4,8 +4,8 @@ from openpyxl import load_workbook, Workbook
 import argparse
 import os
 from datetime import datetime, timedelta
-import excel
-from excel import TEMPLATE_EXCEL_FILE
+import A3_excel
+from A3_excel import TEMPLATE_EXCEL_FILE
 
 
 def get_previous_month_range():

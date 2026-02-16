@@ -4,7 +4,7 @@ from urllib.parse import unquote
 import json
 from openpyxl import load_workbook, Workbook
 
-import excel
+import A3_excel
 from format_A3_report import build_excel_file_name, get_previous_month_range
 
 TRACKING_URL_PREFIX = "https://www.fedex.com/fedextrack/?trknbr="
