@@ -16,7 +16,7 @@ def create_order_to_tracking_url_mapping(json_string):
     rows = json.loads(json_string)
 
     return {row['name']:
-                {"tracking": row['tracking_numbers'][0], "id": row["_id"]}
+                {"tracking": str(row['tracking_numbers'][0]), "id": str(row["_id"])}
             for row in rows}
 
 
