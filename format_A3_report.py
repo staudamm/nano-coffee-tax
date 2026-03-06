@@ -32,7 +32,7 @@ class A3Report:
         for key, source_key in excel.row_key_to_json_key.items():
             row[key] = int(raw_data[source_key]) / 1000 if key == "Amount" else raw_data[source_key]
         row["ID"] = idx + 1
-        row["Region"] = "EU" if "B2B" in raw_data['customer.now.tags'] else "Ausfuhr"
+        row["Region"] = "EU" if "B2B" in raw_data.get('customer.now.tags', []) else "Ausfuhr"
         self.amount[row["Region"]] += row["Amount"]
         self.ws.append(list(row.values()))
 
