@@ -28,13 +28,19 @@ class A3Report:
         self.amount = {"EU": 0, "Ausfuhr": 0}
 
     def _populate_row(self, raw_data, idx):
-        row = excel.row.copy()
-        for key, source_key in excel.row_key_to_json_key.items():
-            row[key] = int(raw_data[source_key]) / 1000 if key == "Amount" else raw_data[source_key]
-        row["ID"] = idx + 1
-        row["Region"] = "EU" if "B2B" in raw_data.get('customer.now.tags', []) else "Ausfuhr"
-        self.amount[row["Region"]] += row["Amount"]
-        self.ws.append(list(row.values()))
+        new_row = excel.row.copy()
+        for target_key, source_key in excel.row_key_to_json_key.items():
+            if target_key == "Amount":
+                new_row[target_key] = int(raw_data.get(source_key))/1000
+            elif source_key in raw_data:
+                new_row[target_key] = raw_data[source_key]
+            else:
+                print('Property not found in JSON data:', source_key)
+
+        new_row["ID"] = idx + 1
+        new_row["Region"] = "EU" if "B2B" in raw_data.get('customer.now.tags', []) else "Ausfuhr"
+        self.amount[new_row["Region"]] += new_row["Amount"]
+        self.ws.append(list(new_row.values()))
 
     def append_json_to_xlsx(self, json_string):
         self.ws.delete_rows(excel.A3_HEADER_ROW + 1, self.ws.max_row)
